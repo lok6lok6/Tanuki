@@ -7,33 +7,33 @@
 import SwiftUI
 
 struct CalculatorView: View {
-    @State private var display: String = "0"
-    
+    @Binding var userInput: String // Pass user input from HiddenChatView
+
     let buttons = [
-        ["7", "8", "9", "+"],
-        ["4", "5", "6", "x"],
+        ["7", "8", "9", "÷"],
+        ["4", "5", "6", "×"],
         ["1", "2", "3", "-"],
-        ["C", "0", "=", "/"]
+        ["C", "0", "=", "+"]
     ]
-    
+
     var body: some View {
         VStack {
-            Text(display)
+            Text(userInput.isEmpty ? "0" : userInput) // Show user input
                 .font(.largeTitle)
                 .frame(maxWidth: .infinity, alignment: .trailing)
                 .padding()
-            
-            ForEach(buttons.indices, id: \.self) { rowIndex in
+                .background(Color.black.opacity(0.2))
+
+            ForEach(buttons, id: \.self) { row in
                 HStack {
-                    ForEach(buttons[rowIndex], id: \.self) { button in
+                    ForEach(row, id: \.self) { button in
                         Button(action: {
                             handleButtonPress(button)
                         }) {
                             Text(button)
                                 .font(.title)
-                                .frame(width: 80, height: 80)
-                                .padding(5)
-                                .background(isOperator(button) ? Color.orange : Color.gray.opacity(0.2))
+                                .frame(width: 70, height: 70)
+                                .background(Color.gray.opacity(0.2))
                                 .cornerRadius(10)
                         }
                     }
@@ -43,32 +43,20 @@ struct CalculatorView: View {
         .background(Color.black.opacity(0.8))
         .foregroundColor(.white)
     }
-    
-    private func isOperator(_ button: String) -> Bool {
-        ["+", "-", "x", "/"].contains(button)
-    }
-    
+
     private func handleButtonPress(_ button: String) {
         if button == "C" {
-            display = "0"
-        }else if button == "=" {
-            //basic calculations
-            let expression = NSExpression(format: display.replacingOccurrences(of: "x", with: "*"))
-            if let result = expression.expressionValue(with: nil, context: nil) as? NSNumber {
-                display = result.stringValue
-            }
-        }else{
-            if display == "0" {
-                display = button
-            }else{
-                display += button
-            }
+            userInput = ""
+        } else if button == "=" {
+            // Prevent switching when pressing "="
+        } else {
+            userInput += button
         }
     }
 }
 
 struct CalculatorView_Previews: PreviewProvider {
     static var previews: some View {
-        CalculatorView()
+        CalculatorView(userInput: .constant(""))
     }
 }

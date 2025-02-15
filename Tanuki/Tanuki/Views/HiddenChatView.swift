@@ -7,20 +7,25 @@
 import SwiftUI
 
 struct HiddenChatView: View {
-    @State private var isChatUnlocked: Bool = false
-    
+    @State private var isChatUnlocked = false
+    @State private var userInput = "" // Track user input
+
     var body: some View {
         ZStack {
             if isChatUnlocked {
-                ChatView() // this is the real Chat UI
-            }else{
-                CalculatorView()
-                    .gesture(LongPressGesture(minimumDuration: 3.0)
-                        .onEnded{ _ in
-                            withAnimation {
-                                isChatUnlocked = true
-                            }
-                        })
+                ChatView() // This is the real Chat UI
+            } else {
+                VStack {
+                    CalculatorView(userInput: $userInput)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
+                .onChange(of: userInput) { newValue in
+                    if newValue == "304" {
+                        withAnimation {
+                            isChatUnlocked = true
+                        }
+                    }
+                }
             }
         }
     }
