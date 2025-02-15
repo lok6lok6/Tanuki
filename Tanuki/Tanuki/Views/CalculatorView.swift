@@ -6,7 +6,7 @@
 //
 import SwiftUI
 
-struct CalculaterView: View {
+struct CalculatorView: View {
     @State private var display: String = "0"
     
     let buttons = [
@@ -67,8 +67,8 @@ struct CalculaterView: View {
     }
 }
 
-struct CalculaterView_Previews: PreviewProvider {
+struct CalculatorView_Previews: PreviewProvider {
     static var previews: some View {
-        CalculaterView()
+        CalculatorView()
     }
 }
